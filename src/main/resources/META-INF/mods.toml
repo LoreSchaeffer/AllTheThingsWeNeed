@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="The 3-Clause BSD License"
+issueTrackerURL="https://github.com/LoreSchaeffer/AllTheThingsWeNeed/issues"
+[[mods]]
+modId="attwn"
+version="${file.jarVersion}"
+displayName="All The Things We Need" #mandatory
+# A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
+#updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+displayURL="https://github.com/LoreSchaeffer/AllTheThingsWeNeed"
+logoFile="logo.png"
+credits="MultiCore Network"
+authors="LoreSchaeffer"
+description='''
+This mod add the most wanted features by the community.
+'''
+[[dependencies.attwn]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.attwn]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
