@@ -1,13 +1,17 @@
 package it.multicoredev.attwn.datagen.utils;
 
+import it.multicoredev.attwn.AllTheThingsWeNeed;
 import it.multicoredev.attwn.datagen.LootTablesGenerator;
 import it.multicoredev.attwn.datagen.ModLanguageProvider;
 import it.multicoredev.attwn.datagen.tags.ModBlockTags;
 import it.multicoredev.attwn.datagen.tags.ModItemTags;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -41,18 +45,91 @@ import java.util.function.Consumer;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public interface BaseRegistry {
-    void registerBlockstates(BlockStateProvider provider);
+public abstract class BaseRegistry {
+    protected final List<RecipeBuilder> recipes = new ArrayList<>();
 
-    void registerModels(ItemModelProvider provider);
+    public abstract void registerBlockstates(BlockStateProvider provider);
 
-    void addAllRecipes(Consumer<FinishedRecipe> consumer);
+    public abstract void registerModels(ItemModelProvider provider);
 
-    void registerToLanguage(ModLanguageProvider provider);
+    public void addAllRecipes(Consumer<FinishedRecipe> consumer) {
+        addAllRecipes();
 
-    void registerBlockTags(ModBlockTags provider);
+        Map<String, Integer> shaped = new HashMap<>();
+        Map<String, Integer> shapeless = new HashMap<>();
+        Map<String, Integer> smelting = new HashMap<>();
+        Map<String, Integer> stonecutter = new HashMap<>();
 
-    void registerItemTags(ModItemTags provider);
+        recipes.forEach(recipe -> {
+            String path;
 
-    void registerLootTables(LootTablesGenerator generator);
+            if (recipe instanceof ShapedRecipeBuilder) {
+                String name = ForgeRegistries.ITEMS.getKey(recipe.getResult()).getPath();
+
+                if (shaped.containsKey(name)) {
+                    int i = shaped.get(name);
+                    shaped.put(name, i + 1);
+                    path = name + "_shaped_" + i;
+                } else {
+                    shaped.put(name, 1);
+                    path = name + "_shaped";
+                }
+            } else if (recipe instanceof ShapelessRecipeBuilder) {
+                String name = ForgeRegistries.ITEMS.getKey(recipe.getResult()).getPath();
+
+                if (shapeless.containsKey(name)) {
+                    int i = shapeless.get(name);
+                    shapeless.put(name, i + 1);
+                    path = name + "_shapeless_" + i;
+                } else {
+                    shapeless.put(name, 1);
+                    path = name + "_shapeless";
+                }
+            } else if (recipe instanceof SimpleCookingRecipeBuilder) {
+                String name = ForgeRegistries.ITEMS.getKey(recipe.getResult()).getPath();
+
+                if (smelting.containsKey(name)) {
+                    int i = smelting.get(name);
+                    smelting.put(name, i + 1);
+                    path = name + "_smelting_" + i;
+                } else {
+                    smelting.put(name, 1);
+                    path = name + "_smelting";
+                }
+            } else {
+                String name = ForgeRegistries.ITEMS.getKey(recipe.getResult()).getPath();
+
+                if (stonecutter.containsKey(name)) {
+                    int i = stonecutter.get(name);
+                    stonecutter.put(name, i + 1);
+                    path = name + "_stonecutter_" + i;
+                } else {
+                    stonecutter.put(name, 1);
+                    path = name + "_stonecutter";
+                }
+            }
+
+            recipe.save(consumer, new ResourceLocation(AllTheThingsWeNeed.MODID, path));
+        });
+    }
+
+    public abstract void registerToLanguage(ModLanguageProvider provider);
+
+    public abstract void registerBlockTags(ModBlockTags provider);
+
+    public abstract void registerItemTags(ModItemTags provider);
+
+    public abstract void registerLootTables(LootTablesGenerator generator);
+
+    protected abstract void addAllRecipes();
+
+    protected BaseRegistry addRecipe(RecipeBuilder builder) {
+        this.recipes.add(builder);
+        return this;
+    }
+
+    protected BaseRegistry addRecipes(Collection<? extends RecipeBuilder> builders) {
+        this.recipes.addAll(builders);
+        return this;
+    }
 }

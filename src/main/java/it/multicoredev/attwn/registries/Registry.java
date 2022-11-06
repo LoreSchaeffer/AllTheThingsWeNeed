@@ -3,6 +3,7 @@ package it.multicoredev.attwn.registries;
 import it.multicoredev.attwn.AllTheThingsWeNeed;
 import it.multicoredev.attwn.datagen.utils.DataGen;
 import it.multicoredev.attwn.init.ModSetup;
+import it.multicoredev.attwn.registries.blocks.Wood;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
@@ -58,7 +59,7 @@ public class Registry {
     private static final String EN_US = "en_us";
 
     @DataGen
-    public static final Wood BAOBAB_PLANKS = new Wood("baobab_planks", BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setLang(EN_US, "Baobab Planks");
+    public static final Wood BAOBAB = new Wood("baobab", BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setLang(EN_US, "Baobab Planks");
 
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

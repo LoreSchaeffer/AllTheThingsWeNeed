@@ -1,14 +1,27 @@
 package it.multicoredev.attwn.registries.blocks;
 
+import it.multicoredev.attwn.datagen.LootTablesGenerator;
+import it.multicoredev.attwn.datagen.ModLanguageProvider;
+import it.multicoredev.attwn.datagen.tags.ModBlockTags;
+import it.multicoredev.attwn.datagen.tags.ModItemTags;
+import it.multicoredev.attwn.datagen.utils.BaseRegistry;
 import it.multicoredev.attwn.registries.Registry;
+import it.multicoredev.attwn.utils.ModRecipeBuilder;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
@@ -50,8 +63,7 @@ import static it.multicoredev.attwn.registries.Registry.fromBlock;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class Wood {
-    private String doubleSlabTexture;
+public class Wood extends BaseRegistry {
     protected final String name;
     private final Map<String, String[]> lang = new HashMap<>();
     private final List<RecipeBuilder> recipes = new ArrayList<>();
@@ -91,6 +103,8 @@ public class Wood {
         this.name = name;
         WOOD_TYPE = WoodType.register(WoodType.create(name)); // TODO Make sure to register its rendering by enqueuing Atlases.addWoodType(...) during client setup...
 
+        //TODO Add boat and boat with chest
+
         PLANKS = BLOCKS.register(name + "_planks", () -> new Block(BlockBehaviour.Properties.of(Material.WOOD, planksColor).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
         LOG = BLOCKS.register(name + "_log", () -> rotatingBlock(planksColor, logColor));
         STRIPPED_LOG = BLOCKS.register("stripped_" + name + "_log", () -> rotatingBlock(planksColor, planksColor));
@@ -123,12 +137,438 @@ public class Wood {
         DOOR_ITEM = fromBlock(DOOR);
     }
 
+    public RegistryObject<Block> getPlanksRegistry() {
+        return PLANKS;
+    }
+
+    public RegistryObject<RotatedPillarBlock> getLogRegistry() {
+        return LOG;
+    }
+
+    public RegistryObject<RotatedPillarBlock> getStrippedLogRegistry() {
+        return STRIPPED_LOG;
+    }
+
+    public RegistryObject<RotatedPillarBlock> getWoodRegistry() {
+        return WOOD;
+    }
+
+    public RegistryObject<RotatedPillarBlock> getStrippedWoodRegistry() {
+        return STRIPPED_WOOD;
+    }
+
+    public RegistryObject<StandingSignBlock> getSignRegistry() {
+        return SIGN;
+    }
+
+    public RegistryObject<WallSignBlock> getWallSignRegistry() {
+        return WALL_SIGN;
+    }
+
+    public RegistryObject<PressurePlateBlock> getPressurePlateRegistry() {
+        return PRESSURE_PLATE;
+    }
+
+    public RegistryObject<TrapDoorBlock> getTrapdoorRegistry() {
+        return TRAPDOOR;
+    }
+
+    public RegistryObject<StairBlock> getStairsRegistry() {
+        return STAIRS;
+    }
+
+    public RegistryObject<WoodButtonBlock> getButtonRegistry() {
+        return BUTTON;
+    }
+
+    public RegistryObject<SlabBlock> getSlabRegistry() {
+        return SLAB;
+    }
+
+    public RegistryObject<FenceGateBlock> getFenceGateRegistry() {
+        return FENCE_GATE;
+    }
+
+    public RegistryObject<FenceBlock> getFenceRegistry() {
+        return FENCE;
+    }
+
+    public RegistryObject<DoorBlock> getDoorRegistry() {
+        return DOOR;
+    }
+
+    public Block getPlanks() {
+        return PLANKS.get();
+    }
+
+    public RotatedPillarBlock getLog() {
+        return LOG.get();
+    }
+
+    public RotatedPillarBlock getStrippedLog() {
+        return STRIPPED_LOG.get();
+    }
+
+    public RotatedPillarBlock getWood() {
+        return WOOD.get();
+    }
+
+    public RotatedPillarBlock getStrippedWood() {
+        return STRIPPED_WOOD.get();
+    }
+
+    public StandingSignBlock getSign() {
+        return SIGN.get();
+    }
+
+    public WallSignBlock getWallSign() {
+        return WALL_SIGN.get();
+    }
+
+    public PressurePlateBlock getPressurePlate() {
+        return PRESSURE_PLATE.get();
+    }
+
+    public TrapDoorBlock getTrapdoor() {
+        return TRAPDOOR.get();
+    }
+
+    public StairBlock getStairs() {
+        return STAIRS.get();
+    }
+
+    public WoodButtonBlock getButton() {
+        return BUTTON.get();
+    }
+
+    public SlabBlock getSlab() {
+        return SLAB.get();
+    }
+
+    public FenceGateBlock getFenceGate() {
+        return FENCE_GATE.get();
+    }
+
+    public FenceBlock getFence() {
+        return FENCE.get();
+    }
+
+    public DoorBlock getDoor() {
+        return DOOR.get();
+    }
+
+    public RegistryObject<Item> getPlanksItemRegistry() {
+        return PLANKS_ITEM;
+    }
+
+    public RegistryObject<Item> getLogItemRegistry() {
+        return LOG_ITEM;
+    }
+
+    public RegistryObject<Item> getStrippedLogItemRegistry() {
+        return STRIPPED_LOG_ITEM;
+    }
+
+    public RegistryObject<Item> getWoodItemRegistry() {
+        return WOOD_ITEM;
+    }
+
+    public RegistryObject<Item> getStrippedWoodItemRegistry() {
+        return STRIPPED_WOOD_ITEM;
+    }
+
+    public RegistryObject<Item> getSignItemRegistry() {
+        return SIGN_ITEM;
+    }
+
+    public RegistryObject<Item> getPressurePlateItemRegistry() {
+        return PRESSURE_PLATE_ITEM;
+    }
+
+    public RegistryObject<Item> getTrapdoorItemRegistry() {
+        return TRAPDOOR_ITEM;
+    }
+
+    public RegistryObject<Item> getStairsItemRegistry() {
+        return STAIRS_ITEM;
+    }
+
+    public RegistryObject<Item> getButtonItemRegistry() {
+        return BUTTON_ITEM;
+    }
+
+    public RegistryObject<Item> getSlabItemRegistry() {
+        return SLAB_ITEM;
+    }
+
+    public RegistryObject<Item> getFenceGateItemRegistry() {
+        return FENCE_GATE_ITEM;
+    }
+
+    public RegistryObject<Item> getFenceItemRegistry() {
+        return FENCE_ITEM;
+    }
+
+    public RegistryObject<Item> getDoorItemRegistry() {
+        return DOOR_ITEM;
+    }
+
+    public Item getPlanksItem() {
+        return PLANKS_ITEM.get();
+    }
+
+    public Item getLogItem() {
+        return LOG_ITEM.get();
+    }
+
+    public Item getStrippedLogItem() {
+        return STRIPPED_LOG_ITEM.get();
+    }
+
+    public Item getWoodItem() {
+        return WOOD_ITEM.get();
+    }
+
+    public Item getStrippedWoodItem() {
+        return STRIPPED_WOOD_ITEM.get();
+    }
+
+    public Item getSignItem() {
+        return SIGN_ITEM.get();
+    }
+
+    public Item getPressurePlateItem() {
+        return PRESSURE_PLATE_ITEM.get();
+    }
+
+    public Item getTrapdoorItem() {
+        return TRAPDOOR_ITEM.get();
+    }
+
+    public Item getStairsItem() {
+        return STAIRS_ITEM.get();
+    }
+
+    public Item getButtonItem() {
+        return BUTTON_ITEM.get();
+    }
+
+    public Item getSlabItem() {
+        return SLAB_ITEM.get();
+    }
+
+    public Item getFenceGateItem() {
+        return FENCE_GATE_ITEM.get();
+    }
+
+    public Item getFenceItem() {
+        return FENCE_ITEM.get();
+    }
+
+    public Item getDoorItem() {
+        return DOOR_ITEM.get();
+    }
+
+    public Wood addTranslation(String locale, String name) {
+        lang.put(locale, new String[]{
+                name + " Planks",
+                name + " Log",
+                "Stripped " + name + " Log",
+                name + " Wood",
+                "Stripped " + name + " Wood",
+                name + " Sign",
+                name + " Pressure Plate",
+                name + " Trapdoor",
+                name + " Stairs",
+                name + " Button",
+                name + " Slab",
+                name + " Fence Gate",
+                name + " Fence",
+                name + " Door"
+        });
+
+        return this;
+    }
+
+    @Override
+    protected void addAllRecipes() {
+        addRecipe(ModRecipeBuilder.oneRecipe(getLog(), getPlanks(), 4));
+        addRecipe(ModRecipeBuilder.oneRecipe(getStrippedLog(), getPlanks(), 4));
+        addRecipe(ModRecipeBuilder.oneRecipe(getWood(), getPlanks(), 4));
+        addRecipe(ModRecipeBuilder.oneRecipe(getStrippedWood(), getPlanks(), 4));
+
+        addRecipe(ShapedRecipeBuilder.shaped(getWood(), 3)
+                .pattern("##")
+                .pattern("##")
+                .define('#', getLog())
+                .group(ForgeRegistries.ITEMS.getKey(getLog().asItem()).getPath())
+                .unlockedBy(ForgeRegistries.ITEMS.getKey(getLog().asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(getLog().asItem()))
+        );
+
+        addRecipe(ShapedRecipeBuilder.shaped(getStrippedWood(), 3)
+                .pattern("##")
+                .pattern("##")
+                .define('#', getLog())
+                .group(ForgeRegistries.ITEMS.getKey(getStrippedLog().asItem()).getPath())
+                .unlockedBy(ForgeRegistries.ITEMS.getKey(getStrippedLog().asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(getStrippedLog().asItem()))
+        );
+
+        addRecipe(ShapedRecipeBuilder.shaped(getSign(), 3)
+                .pattern("###")
+                .pattern("###")
+                .pattern(" S ")
+                .define('#', getPlanks())
+                .define('S', Items.STICK)
+                .group(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath())
+                .unlockedBy(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(getPlanks().asItem()))
+        );
+
+        addRecipe(ModRecipeBuilder.pressurePlate(getPressurePlate(), getPlanks()));
+
+        addRecipe(ShapedRecipeBuilder.shaped(getTrapdoor(), 2)
+                .pattern("###")
+                .pattern("###")
+                .define('#', getPlanks())
+                .group(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath())
+                .unlockedBy(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(getPlanks().asItem()))
+        );
+
+        addRecipe(ModRecipeBuilder.stairs(getStairs(), getPlanks()));
+        addRecipe(ModRecipeBuilder.button(getButton(), getPlanks()));
+        addRecipe(ModRecipeBuilder.slab(getSlab(), getPlanks()));
+
+        addRecipe(ShapedRecipeBuilder.shaped(getFenceGate(), 1)
+                .pattern("S#S")
+                .pattern("S#S")
+                .define('#', getPlanks())
+                .define('S', Items.STICK)
+                .group(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath())
+                .unlockedBy(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(getPlanks().asItem()))
+        );
+
+        addRecipe(ShapedRecipeBuilder.shaped(getFence(), 3)
+                .pattern("#S#")
+                .pattern("#S#")
+                .define('#', getPlanks())
+                .define('S', Items.STICK)
+                .group(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath())
+                .unlockedBy(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(getPlanks().asItem()))
+        );
+
+        addRecipe(ShapedRecipeBuilder.shaped(getDoor(), 3)
+                .pattern("##")
+                .pattern("##")
+                .pattern("##")
+                .define('#', getPlanks())
+                .group(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath())
+                .unlockedBy(ForgeRegistries.ITEMS.getKey(getPlanks().asItem()).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(getPlanks().asItem()))
+        );
+    }
+
+    @Override
+    public void registerBlockstates(BlockStateProvider provider) {
+        provider.simpleBlock(getPlanks());
+        provider.simpleBlock(getLog());
+        provider.simpleBlock(getStrippedLog());
+        provider.simpleBlock(getWood());
+        provider.simpleBlock(getStrippedWood());
+        //provider.simpleBlock(getSign());
+        //provider.simpleBlock(getPressurePlate());
+        //provider.simpleBlock(getTrapdoor());
+        provider.stairsBlock(getStairs(), provider.modLoc("block/" + name));
+        //provider.simpleBlock(getButton());
+        provider.slabBlock(getSlab(), provider.modLoc("block/" + name), provider.modLoc("block/" + name));
+        //provider.simpleBlock(getFenceGate());
+        //provider.simpleBlock(getFence());
+        //provider.simpleBlock(getDoor());
+    }
+
+    @Override
+    public void registerModels(ItemModelProvider provider) {
+        provider.withExistingParent(name, provider.modLoc("block/" + name));
+        provider.orientableVertical(name + "_log", provider.modLoc("block/" + name + "_log_side"), provider.modLoc("block/" + name + "_log_top"));
+        provider.withExistingParent("stripped_" + name + "_log", provider.modLoc("block/" + "stripped_" + name + "_log"));
+        provider.withExistingParent(name + "_wood", provider.modLoc("block/" + name + "_wood"));
+        provider.withExistingParent("stripped_" + name + "_wood", provider.modLoc("block/" + "stripped_" + name + "_wood"));
+        //provider.withExistingParent(name + "_sign", provider.modLoc("block/" + name + "_sign"));
+        //provider.withExistingParent(name + "_pressure_plate", provider.modLoc("block/" + name + "_pressure_plate"));
+        //provider.withExistingParent(name + "_trapdoor", provider.modLoc("block/" + name + "_trapdoor"));
+        provider.stairs(name + "_stairs", provider.modLoc("block/" + name + "_stairs"), provider.modLoc("block/" + name + "_stairs"), provider.modLoc("block/" + name + "_stairs"));
+        //provider.withExistingParent(name + "_button", provider.modLoc("block/" + name + "_button"));
+        provider.slab(name + "_slab", provider.modLoc("block/" + name), provider.modLoc("block/" + name), provider.modLoc("block/" + name));
+        //provider.withExistingParent(name + "_fence_gate", provider.modLoc("block/" + name + "_fence_gate"));
+        //provider.withExistingParent(name + "_fence", provider.modLoc("block/" + name + "_fence"));
+        //provider.withExistingParent(name + "_door", provider.modLoc("block/" + name + "_door"));
+    }
+
+    @Override
+    public void registerToLanguage(ModLanguageProvider provider) {
+        if (!lang.containsKey(provider.getLocale())) return;
+        String[] names = lang.get(provider.getLocale());
+
+        provider.add(getPlanks(), names[0]);
+        provider.add(getLog(), names[1]);
+        provider.add(getStrippedLog(), names[2]);
+        provider.add(getWood(), names[3]);
+        provider.add(getStrippedWood(), names[4]);
+        provider.add(getSign(), names[5]);
+        provider.add(getPressurePlate(), names[6]);
+        provider.add(getTrapdoor(), names[7]);
+        provider.add(getStairs(), names[8]);
+        provider.add(getButton(), names[9]);
+        provider.add(getSlab(), names[10]);
+        provider.add(getFenceGate(), names[11]);
+        provider.add(getFence(), names[12]);
+        provider.add(getDoor(), names[13]);
+    }
+
+    @Override
+    public void registerBlockTags(ModBlockTags provider) {
+        provider.addTag(BlockTags.MINEABLE_WITH_AXE).add(
+                getPlanks(),
+                getLog(),
+                getStrippedLog(),
+                getWood(),
+                getStrippedWood(),
+                getSign(),
+                getPressurePlate(),
+                getTrapdoor(),
+                getStairs(),
+                getButton(),
+                getSlab(),
+                getFenceGate(),
+                getFence(),
+                getDoor()
+        );
+
+        provider.addTag(BlockTags.PLANKS).add(getPlanks());
+        provider.addTag(BlockTags.WOODEN_BUTTONS).add(getButton());
+        provider.addTag(BlockTags.WOODEN_DOORS).add(getDoor());
+        provider.addTag(BlockTags.WOODEN_STAIRS).add(getStairs());
+        provider.addTag(BlockTags.WOODEN_SLABS).add(getSlab());
+        provider.addTag(BlockTags.WOODEN_FENCES).add(getFence());
+        //TODO Create tag NAME_LOGS containing log, wood, stripped log, stripped wood
+        provider.addTag(BlockTags.LOGS_THAT_BURN).add(getLog());
+        provider.addTag(BlockTags.OVERWORLD_NATURAL_LOGS).add(getLog());
+        provider.addTag(BlockTags.WOODEN_PRESSURE_PLATES).add(getPressurePlate());
+        provider.addTag(BlockTags.WOODEN_TRAPDOORS).add(getTrapdoor());
+        provider.addTag(BlockTags.STANDING_SIGNS).add(getSign());
+        provider.addTag(BlockTags.WALL_SIGNS).add(getWallSign());
+        provider.addTag(BlockTags.FENCE_GATES).add(getFenceGate());
+    }
+
+    @Override
+    public void registerItemTags(ModItemTags provider) {
+    }
+
+    @Override
+    public void registerLootTables(LootTablesGenerator generator) {
+    }
+
     private static RotatedPillarBlock rotatingBlock(MaterialColor topColor, MaterialColor sideColor) {
         return new RotatedPillarBlock(BlockBehaviour.Properties
                 .of(Material.WOOD, state -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : sideColor)
                 .strength(2.0F)
                 .sound(SoundType.WOOD));
     }
-
-
 }
