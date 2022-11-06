@@ -1,18 +1,10 @@
-package it.multicoredev.attwn;
+package it.multicoredev.attwn.datagen;
 
-import com.mojang.logging.LogUtils;
-import it.multicoredev.attwn.init.ClientSetup;
-import it.multicoredev.attwn.init.ModSetup;
-import it.multicoredev.attwn.registries.Registry;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
+import it.multicoredev.attwn.AllTheThingsWeNeed;
+import it.multicoredev.attwn.datagen.utils.RegistryHelper;
+import net.minecraft.data.DataGenerator;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 /**
  * BSD 3-Clause License
@@ -45,29 +37,14 @@ import org.slf4j.Logger;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-@Mod(AllTheThingsWeNeed.MODID)
-public class AllTheThingsWeNeed {
-    public static final String MODID = "attwn";
-    public static final Logger LOGGER = LogUtils.getLogger();
+public class ItemModelsGenerator extends ItemModelProvider {
 
-    public AllTheThingsWeNeed() {
-        ModSetup.setup();
-        Registry.init();
-
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(ModSetup::init);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
+    public ItemModelsGenerator(DataGenerator generator, ExistingFileHelper helper) {
+        super(generator, AllTheThingsWeNeed.MODID, helper);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-
-    }
-
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-
-        }
+    @Override
+    protected void registerModels() {
+        RegistryHelper.getDataGenFields().forEach(registry -> registry.registerModels(this));
     }
 }

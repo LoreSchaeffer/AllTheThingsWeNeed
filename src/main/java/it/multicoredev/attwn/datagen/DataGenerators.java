@@ -1,18 +1,11 @@
-package it.multicoredev.attwn;
+package it.multicoredev.attwn.datagen;
 
-import com.mojang.logging.LogUtils;
-import it.multicoredev.attwn.init.ClientSetup;
-import it.multicoredev.attwn.init.ModSetup;
-import it.multicoredev.attwn.registries.Registry;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
+import it.multicoredev.attwn.datagen.tags.ModBlockTags;
+import it.multicoredev.attwn.datagen.tags.ModItemTags;
+import net.minecraft.data.DataGenerator;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
 
 /**
  * BSD 3-Clause License
@@ -45,29 +38,21 @@ import org.slf4j.Logger;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-@Mod(AllTheThingsWeNeed.MODID)
-public class AllTheThingsWeNeed {
-    public static final String MODID = "attwn";
-    public static final Logger LOGGER = LogUtils.getLogger();
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+public class DataGenerators {
 
-    public AllTheThingsWeNeed() {
-        ModSetup.setup();
-        Registry.init();
+    @SubscribeEvent
+    public static void gatherData(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(ModSetup::init);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
-    }
+        generator.addProvider(event.includeServer(), new RecipeGenerator(generator));
+        generator.addProvider(event.includeServer(), new LootTablesGenerator(generator));
+        ModBlockTags blockTags = new ModBlockTags(generator, event.getExistingFileHelper());
+        generator.addProvider(event.includeServer(), blockTags);
+        generator.addProvider(event.includeServer(), new ModItemTags(generator, blockTags, event.getExistingFileHelper()));
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-
-    }
-
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-
-        }
+        generator.addProvider(event.includeClient(), new BlockstatesGenerator(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new ItemModelsGenerator(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new ModLanguageProvider(generator, "en_us"));
     }
 }

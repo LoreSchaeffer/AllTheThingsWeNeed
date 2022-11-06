@@ -1,18 +1,14 @@
-package it.multicoredev.attwn;
+package it.multicoredev.attwn.datagen.utils;
 
-import com.mojang.logging.LogUtils;
-import it.multicoredev.attwn.init.ClientSetup;
-import it.multicoredev.attwn.init.ModSetup;
-import it.multicoredev.attwn.registries.Registry;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
+import it.multicoredev.attwn.datagen.LootTablesGenerator;
+import it.multicoredev.attwn.datagen.ModLanguageProvider;
+import it.multicoredev.attwn.datagen.tags.ModBlockTags;
+import it.multicoredev.attwn.datagen.tags.ModItemTags;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+
+import java.util.function.Consumer;
 
 /**
  * BSD 3-Clause License
@@ -45,29 +41,18 @@ import org.slf4j.Logger;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-@Mod(AllTheThingsWeNeed.MODID)
-public class AllTheThingsWeNeed {
-    public static final String MODID = "attwn";
-    public static final Logger LOGGER = LogUtils.getLogger();
+public interface BaseRegistry {
+    void registerBlockstates(BlockStateProvider provider);
 
-    public AllTheThingsWeNeed() {
-        ModSetup.setup();
-        Registry.init();
+    void registerModels(ItemModelProvider provider);
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(ModSetup::init);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
-    }
+    void addAllRecipes(Consumer<FinishedRecipe> consumer);
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
+    void registerToLanguage(ModLanguageProvider provider);
 
-    }
+    void registerBlockTags(ModBlockTags provider);
 
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
+    void registerItemTags(ModItemTags provider);
 
-        }
-    }
+    void registerLootTables(LootTablesGenerator generator);
 }
