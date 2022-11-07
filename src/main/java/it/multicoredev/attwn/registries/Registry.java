@@ -59,7 +59,7 @@ public class Registry {
     private static final String EN_US = "en_us";
 
     @DataGen
-    public static final Wood BAOBAB = new Wood("baobab", BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN).strength(2.0F, 3.0F).sound(SoundType.WOOD)).setLang(EN_US, "Baobab Planks");
+    public static final Wood BAOBAB = new Wood("baobab", MaterialColor.COLOR_BROWN, MaterialColor.COLOR_BROWN);
 
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

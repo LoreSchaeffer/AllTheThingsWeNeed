@@ -53,7 +53,7 @@ import java.util.function.Consumer;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class BaseBlock implements BaseRegistry {
+public class BaseBlock extends BaseRegistry {
     protected final String name;
     private final RegistryObject<Block> block;
     private final RegistryObject<Item> blockItem;

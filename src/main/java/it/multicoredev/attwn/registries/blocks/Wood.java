@@ -466,38 +466,38 @@ public class Wood extends BaseRegistry {
     }
 
     @Override
-    public void registerBlockstates(BlockStateProvider provider) {
+    public void registerBlockstates(BlockStateProvider provider) { //TODO Fix blockstates
         provider.simpleBlock(getPlanks());
         provider.simpleBlock(getLog());
         provider.simpleBlock(getStrippedLog());
         provider.simpleBlock(getWood());
         provider.simpleBlock(getStrippedWood());
-        //provider.simpleBlock(getSign());
-        //provider.simpleBlock(getPressurePlate());
-        //provider.simpleBlock(getTrapdoor());
+        provider.signBlock(getSign(), getWallSign(), provider.modLoc("block/" + name));
+        provider.pressurePlateBlock(getPressurePlate(), provider.modLoc("block/" + name));
+        provider.trapdoorBlock(getTrapdoor(), provider.modLoc("block/" + name), true);
         provider.stairsBlock(getStairs(), provider.modLoc("block/" + name));
-        //provider.simpleBlock(getButton());
+        provider.buttonBlock(getButton(), provider.modLoc("block/" + name));
         provider.slabBlock(getSlab(), provider.modLoc("block/" + name), provider.modLoc("block/" + name));
-        //provider.simpleBlock(getFenceGate());
-        //provider.simpleBlock(getFence());
-        //provider.simpleBlock(getDoor());
+        provider.fenceGateBlock(getFenceGate(), provider.modLoc("block/" + name));
+        provider.fenceBlock(getFence(), provider.modLoc("block/" + name));
+        provider.doorBlock(getDoor(), provider.modLoc("block/" + name + "_bottom"), provider.modLoc("block/" + name + "_top"));
     }
 
     @Override
-    public void registerModels(ItemModelProvider provider) {
+    public void registerModels(ItemModelProvider provider) { //TODO Fix models
         provider.withExistingParent(name, provider.modLoc("block/" + name));
         provider.orientableVertical(name + "_log", provider.modLoc("block/" + name + "_log_side"), provider.modLoc("block/" + name + "_log_top"));
         provider.withExistingParent("stripped_" + name + "_log", provider.modLoc("block/" + "stripped_" + name + "_log"));
         provider.withExistingParent(name + "_wood", provider.modLoc("block/" + name + "_wood"));
         provider.withExistingParent("stripped_" + name + "_wood", provider.modLoc("block/" + "stripped_" + name + "_wood"));
-        //provider.withExistingParent(name + "_sign", provider.modLoc("block/" + name + "_sign"));
-        //provider.withExistingParent(name + "_pressure_plate", provider.modLoc("block/" + name + "_pressure_plate"));
-        //provider.withExistingParent(name + "_trapdoor", provider.modLoc("block/" + name + "_trapdoor"));
+        provider.sign(name + "_sign", provider.modLoc("block/" + name + "_sign"));
+        provider.pressurePlate(name + "_pressure_plate", provider.modLoc("block/" + name + "_pressure_plate"));
+        provider.trapdoorOrientableBottom(name + "_trapdoor", provider.modLoc("block/" + name + "_trapdoor"));
         provider.stairs(name + "_stairs", provider.modLoc("block/" + name + "_stairs"), provider.modLoc("block/" + name + "_stairs"), provider.modLoc("block/" + name + "_stairs"));
-        //provider.withExistingParent(name + "_button", provider.modLoc("block/" + name + "_button"));
+        provider.button(name + "_button", provider.modLoc("block/" + name + "_button"));
         provider.slab(name + "_slab", provider.modLoc("block/" + name), provider.modLoc("block/" + name), provider.modLoc("block/" + name));
-        //provider.withExistingParent(name + "_fence_gate", provider.modLoc("block/" + name + "_fence_gate"));
-        //provider.withExistingParent(name + "_fence", provider.modLoc("block/" + name + "_fence"));
+        provider.fenceGate(name + "_fence_gate", provider.modLoc("block/" + name + "_fence_gate"));
+        provider.fencePost(name + "_fence", provider.modLoc("block/" + name + "_fence"));
         //provider.withExistingParent(name + "_door", provider.modLoc("block/" + name + "_door"));
     }
 
